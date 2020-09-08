@@ -1,13 +1,35 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import EthContext from "../EthContext";
+import Dropdown from "./Dropdown";
+import Wallet from "./Wallet";
 
 function Shell() {
   const [showMenu, setShowMenu] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
+  const [tokens, setTokens] = useState([]);
+  const [activeToken, setActiveToken] = useState("");
   const eth = useContext(EthContext);
-  const dexAddress = eth["contracts"]["dex"]._address;
+  const web3 = eth["web3"];
+  const dex = eth["contracts"]["dex"];
   const accountAddress = eth["accounts"][0];
+  const dexAddress = dex._address;
+
+  useEffect(() => {
+    const init = async () => {
+      const tokens = await dex.methods.getTokens().call();
+      const tokenSymbols = [];
+      tokens.map((token) => {
+        const symbol = web3.utils.hexToUtf8(token["symbol"]);
+        if (symbol != "DAI") {
+          tokenSymbols.push(symbol);
+        }
+      });
+      setActiveToken(tokenSymbols[0]);
+      setTokens(tokenSymbols);
+    };
+    init();
+  }, []);
 
   return (
     <div>
@@ -125,7 +147,7 @@ function Shell() {
         </nav>
         <header className="py-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl leading-9 font-bold text-white">Dashboard</h1>
+            <Dropdown tokens={tokens} activeToken={activeToken} setActiveToken={setActiveToken} />
           </div>
         </header>
       </div>
@@ -133,7 +155,9 @@ function Shell() {
       <main className="-mt-32">
         <div className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
-            <div className="border-4 border-dashed border-gray-200 rounded-lg h-96"></div>
+            <div className="grid grid-cols-3 gap-4">
+              <Wallet activeToken={activeToken} />
+            </div>
           </div>
         </div>
       </main>
