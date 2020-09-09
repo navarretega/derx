@@ -26,9 +26,9 @@ function App() {
 
         // ERC20 Tokens
         const tokenContracts = {};
-        tokens.map((token) => {
+        for (const token of tokens) {
           tokenContracts[web3.utils.hexToUtf8(token["symbol"])] = new web3.eth.Contract(ERC20.abi, token["tokenAddress"]);
-        });
+        }
 
         setWeb3(web3);
         setAccounts(accounts);
@@ -41,7 +41,7 @@ function App() {
   }, []);
 
   if (typeof web3 === "undefined" || accounts.length === 0 || typeof contracts === "undefined") {
-    return <Loading />;
+    return <Loading full />;
   }
 
   return (

@@ -10,8 +10,10 @@ module.exports = async function (deployer, network, accounts) {
   const bnbSymbol = web3.utils.fromAscii("BNB");
   const linkSymbol = web3.utils.fromAscii("LINK");
   const yfiSymbol = web3.utils.fromAscii("YFI");
-  const daiAmount = web3.utils.toWei("1500");
-  const amount = web3.utils.toWei("500");
+  const daiAmount = web3.utils.toWei("2000"); // 2000 DAI from faucet to account
+  const tokenAmount = web3.utils.toWei("1000"); // 1000 BNB/LINK/YFI from faucet to account
+  const dexDaiAmount = web3.utils.toWei("1500"); // 1000 DAI from account to dex
+  const dexTokenAmount = web3.utils.toWei("500"); // 500 BNB/LINK/YFI from account to dex
   const [trader1, trader2, _] = accounts;
   const buy = 0;
   const sell = 1;
@@ -39,32 +41,32 @@ module.exports = async function (deployer, network, accounts) {
   // Allocate Tokens to different accounts (Trader1 and Trader2)
   await dai.faucet(trader1, daiAmount);
   await dai.faucet(trader2, daiAmount);
-  await bnb.faucet(trader1, amount);
-  await bnb.faucet(trader2, amount);
-  await link.faucet(trader1, amount);
-  await link.faucet(trader2, amount);
-  await yfi.faucet(trader1, amount);
-  await yfi.faucet(trader2, amount);
+  await bnb.faucet(trader1, tokenAmount);
+  await bnb.faucet(trader2, tokenAmount);
+  await link.faucet(trader1, tokenAmount);
+  await link.faucet(trader2, tokenAmount);
+  await yfi.faucet(trader1, tokenAmount);
+  await yfi.faucet(trader2, tokenAmount);
 
   // Approve Tokens to be handled by DEX (Trader1/Trader2 are letting the DEX use its tokens)
-  await dai.approve(dex.address, daiAmount, { from: trader1 });
-  await dai.approve(dex.address, daiAmount, { from: trader2 });
-  await bnb.approve(dex.address, amount, { from: trader1 });
-  await bnb.approve(dex.address, amount, { from: trader2 });
-  await link.approve(dex.address, amount, { from: trader1 });
-  await link.approve(dex.address, amount, { from: trader2 });
-  await yfi.approve(dex.address, amount, { from: trader1 });
-  await yfi.approve(dex.address, amount, { from: trader2 });
+  await dai.approve(dex.address, dexDaiAmount, { from: trader1 });
+  await dai.approve(dex.address, dexDaiAmount, { from: trader2 });
+  await bnb.approve(dex.address, dexTokenAmount, { from: trader1 });
+  await bnb.approve(dex.address, dexTokenAmount, { from: trader2 });
+  await link.approve(dex.address, dexTokenAmount, { from: trader1 });
+  await link.approve(dex.address, dexTokenAmount, { from: trader2 });
+  await yfi.approve(dex.address, dexTokenAmount, { from: trader1 });
+  await yfi.approve(dex.address, dexTokenAmount, { from: trader2 });
 
   // Deposit tokens to DEX (From Trader1/Trader2 to DEX)
-  await dex.deposit(daiSymbol, daiAmount, { from: trader1 });
-  await dex.deposit(daiSymbol, daiAmount, { from: trader2 });
-  await dex.deposit(bnbSymbol, amount, { from: trader1 });
-  await dex.deposit(bnbSymbol, amount, { from: trader2 });
-  await dex.deposit(linkSymbol, amount, { from: trader1 });
-  await dex.deposit(linkSymbol, amount, { from: trader2 });
-  await dex.deposit(yfiSymbol, amount, { from: trader1 });
-  await dex.deposit(yfiSymbol, amount, { from: trader2 });
+  await dex.deposit(daiSymbol, dexDaiAmount, { from: trader1 });
+  await dex.deposit(daiSymbol, dexDaiAmount, { from: trader2 });
+  await dex.deposit(bnbSymbol, dexTokenAmount, { from: trader1 });
+  await dex.deposit(bnbSymbol, dexTokenAmount, { from: trader2 });
+  await dex.deposit(linkSymbol, dexTokenAmount, { from: trader1 });
+  await dex.deposit(linkSymbol, dexTokenAmount, { from: trader2 });
+  await dex.deposit(yfiSymbol, dexTokenAmount, { from: trader1 });
+  await dex.deposit(yfiSymbol, dexTokenAmount, { from: trader2 });
 
   // Utility function to increase time between orders created below
   const increaseTime = async (seconds) => {

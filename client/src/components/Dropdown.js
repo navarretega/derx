@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 function Dropdown({ tokens, activeToken, setActiveToken }) {
   const [showMenu, setShowMenu] = useState(false);
+  const myRef = useRef();
+
+  const handleClickOutside = (e) => {
+    const curr = myRef.current;
+    if (curr && !curr.contains(e.target)) {
+      setShowMenu(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
 
   return (
-    <div className="relative inline-block text-left">
+    <div ref={myRef} className="relative inline-block text-left">
       <div>
         <button
           type="button"

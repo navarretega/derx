@@ -129,7 +129,7 @@ contract("Dex", ([owner, trader1, trader2]) => {
       const amount = toWei("10000");
       const symbol = web3.utils.fromAscii("DAI");
       await dex.deposit(symbol, amount, { from: trader1 });
-      await dex.widthraw(symbol, amount, { from: trader1 });
+      await dex.withdraw(symbol, amount, { from: trader1 });
       const daiBalance = await dai.balanceOf(trader1);
       const dexBalance = await dex.balances(trader1, symbol);
       assert.equal(daiBalance.toString(), amount);
@@ -138,12 +138,12 @@ contract("Dex", ([owner, trader1, trader2]) => {
     it("Should not withdraw tokens if token does not exist", async () => {
       const amount = toWei("10000");
       const symbol = web3.utils.fromAscii("BAT");
-      await expectRevert(dex.widthraw(symbol, amount, { from: trader1 }), "Token does not exist");
+      await expectRevert(dex.withdraw(symbol, amount, { from: trader1 }), "Token does not exist");
     });
     it("Should not withdraw tokens if dex balance is less than amount", async () => {
       const amount = toWei("10000");
       const symbol = web3.utils.fromAscii("DAI");
-      await expectRevert(dex.widthraw(symbol, amount, { from: trader1 }), "Not enough tokens");
+      await expectRevert(dex.withdraw(symbol, amount, { from: trader1 }), "Not enough tokens");
     });
     it("Should create limit order", async () => {
       const depositAmount = toWei("10000");

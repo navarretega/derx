@@ -1,35 +1,55 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
+
+// BUG - First time it loads, the balances are not shown
 
 import EthContext from "../EthContext";
 import Dropdown from "./Dropdown";
 import Wallet from "./Wallet";
+import ERC20Modal from "./ERC20Modal";
 
 function Shell() {
   const [showMenu, setShowMenu] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
   const [tokens, setTokens] = useState([]);
   const [activeToken, setActiveToken] = useState("");
+  const [showERCModal, setShowERCModal] = useState(false);
   const eth = useContext(EthContext);
   const web3 = eth["web3"];
   const dex = eth["contracts"]["dex"];
   const accountAddress = eth["accounts"][0];
   const dexAddress = dex._address;
+  const myRef = useRef();
+
+  const handleClickOutside = (e) => {
+    const curr = myRef.current;
+    if (curr && !curr.contains(e.target)) {
+      if (showAccount) {
+        console.log(curr);
+        setShowAccount(false);
+      }
+    }
+  };
 
   useEffect(() => {
-    const init = async () => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
+
+  useEffect(() => {
+    async function init() {
       const tokens = await dex.methods.getTokens().call();
       const tokenSymbols = [];
-      tokens.map((token) => {
+      for (const token of tokens) {
         const symbol = web3.utils.hexToUtf8(token["symbol"]);
-        if (symbol != "DAI") {
+        if (symbol !== "DAI") {
           tokenSymbols.push(symbol);
         }
-      });
+      }
       setActiveToken(tokenSymbols[0]);
       setTokens(tokenSymbols);
-    };
+    }
     init();
-  }, []);
+  }, [dex, web3]);
 
   return (
     <div>
@@ -63,7 +83,7 @@ function Shell() {
                       </svg>
                     </button>
 
-                    <div className="ml-3 relative">
+                    <div ref={myRef} className="ml-3 relative">
                       <div>
                         <button
                           onClick={() => setShowAccount(!showAccount)}
@@ -76,16 +96,22 @@ function Shell() {
                         </button>
                       </div>
 
+                      {showERCModal && <ERC20Modal setShowERCModal={setShowERCModal} tokens={tokens} />}
+
                       {showAccount && (
                         <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
                           <div className="py-1 rounded-md bg-white shadow-xs">
                             <p className="block px-4 py-1 text-sm text-gray-700">Your Account</p>
-                            <p
-                              className="block px-4 py-1 text-xs text-gray-700 hover:bg-gray-100"
+                            <button
+                              onClick={() => {
+                                setShowAccount(false);
+                                setShowERCModal(true);
+                              }}
+                              className="w-full px-4 py-1 text-xs text-gray-700 hover:bg-gray-100"
                               style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
                             >
                               {accountAddress}
-                            </p>
+                            </button>
                           </div>
                         </div>
                       )}

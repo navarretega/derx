@@ -125,8 +125,8 @@ contract Dex {
         balances[msg.sender][symbol] = balances[msg.sender][symbol].add(amount);
     }
     
-    // Widthraw Tokens from Exchange
-    function widthraw(bytes32 symbol, uint amount) tokenExists(symbol) external {
+    // Withdraw Tokens from Exchange
+    function withdraw(bytes32 symbol, uint amount) tokenExists(symbol) external {
         require(balances[msg.sender][symbol] >= amount, 'Not enough tokens');
         IERC20(tokens[symbol].tokenAddress).transfer(msg.sender, amount);
         balances[msg.sender][symbol] = balances[msg.sender][symbol].sub(amount);
