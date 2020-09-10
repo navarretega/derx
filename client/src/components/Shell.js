@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 
-// BUG - First time it loads, the balances are not shown
-
 import EthContext from "../EthContext";
 import Dropdown from "./Dropdown";
 import Wallet from "./Wallet";
+import Orders from "./Orders";
 import ERC20Modal from "./ERC20Modal";
+import WalletModal from "./WalletModal";
 
 function Shell() {
   const [showMenu, setShowMenu] = useState(false);
@@ -13,6 +13,8 @@ function Shell() {
   const [tokens, setTokens] = useState([]);
   const [activeToken, setActiveToken] = useState("");
   const [showERCModal, setShowERCModal] = useState(false);
+  const [showWalletModal, setShowWalletModal] = useState(false);
+  const [walletDef, setWalletDef] = useState({});
   const eth = useContext(EthContext);
   const web3 = eth["web3"];
   const dex = eth["contracts"]["dex"];
@@ -181,12 +183,16 @@ function Shell() {
       <main className="-mt-32">
         <div className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
-            <div className="grid grid-cols-3 gap-4">
-              <Wallet activeToken={activeToken} />
+            <div className="grid grid-cols-3 gap-8" style={{ minHeight: "20rem" }}>
+              <Wallet activeToken={activeToken} setShowWalletModal={setShowWalletModal} setWalletDef={setWalletDef} />
+              <Orders type="BUY" activeToken={activeToken} />
+              <Orders type="SELL" activeToken={activeToken} />
             </div>
           </div>
         </div>
       </main>
+
+      {showWalletModal && <WalletModal setShowWalletModal={setShowWalletModal} walletDef={walletDef} />}
     </div>
   );
 }

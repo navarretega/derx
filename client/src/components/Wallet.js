@@ -1,17 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import EthContext from "../EthContext";
-import WalletModal from "./WalletModal";
 import Notification from "./Notification";
 
-function Wallet({ activeToken }) {
+function Wallet({ activeToken, setShowWalletModal, setWalletDef }) {
   const [daiTokenBalance, setDaiTokenBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState(0);
   const [getBalance, setGetBalance] = useState(false);
-  const [showWalletModal, setShowWalletModal] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showErr, setShowErr] = useState(false);
-  const [walletDef, setWalletDef] = useState({});
   const eth = useContext(EthContext);
   const contracts = eth["contracts"];
   const dex = contracts["dex"];
@@ -68,10 +65,10 @@ function Wallet({ activeToken }) {
   }, [web3, dex, accountAddress, activeToken, getBalance]);
 
   return (
-    <div className="bg-gray-100 overflow-hidden shadow rounded-lg">
+    <div className="bg-gray-50 overflow-hidden shadow rounded-lg">
       {showNotification && <Notification setShowNotification={setShowNotification} showErr={showErr} />}
-      <div className="text-center px-4 py-5 sm:px-6 tracking-wider">WALLET</div>
-      <div className="bg-gray-50 px-4 py-5 sm:p-6">
+      <div className="bg-gray-100 text-center px-4 py-5 sm:px-6 tracking-wider">WALLET</div>
+      <div className="px-4 py-5 sm:p-6">
         <div className="flex justify-between items-center">
           <div>
             <h4 className="text-xl">
@@ -172,7 +169,6 @@ function Wallet({ activeToken }) {
           </div>
         </div>
       </div>
-      {showWalletModal && <WalletModal setShowWalletModal={setShowWalletModal} walletDef={walletDef} />}
     </div>
   );
 }
