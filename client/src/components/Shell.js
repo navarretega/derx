@@ -6,12 +6,16 @@ import Wallet from "./Wallet";
 import Orders from "./Orders";
 import AllOrders from "./AllOrders";
 import MyOrders from "./MyOrders";
+import MyTrades from "./MyTrades";
+import AllTrades from "./AllTrades";
 import ERC20Modal from "./ERC20Modal";
 import WalletModal from "./WalletModal";
 
 function Shell() {
   const [showMenu, setShowMenu] = useState(false);
   const [showAccount, setShowAccount] = useState(false);
+  const [trades, setTrades] = useState([]);
+  const [listener, setListener] = useState();
   const [tokens, setTokens] = useState([]);
   const [activeToken, setActiveToken] = useState("");
   const [showERCModal, setShowERCModal] = useState(false);
@@ -34,6 +38,27 @@ function Shell() {
     }
   };
 
+  const compare = (a, b) => {
+    let comparison = 0;
+    if (parseInt(a.tradeId) > parseInt(b.tradeId)) {
+      comparison = -1;
+    } else {
+      comparison = 1;
+    }
+    return comparison;
+  };
+
+  const tradesListener = (_token) => {
+    const listener = dex.events.Trade({ filter: { symbol: web3.utils.fromAscii(_token) }, fromBlock: 0 }).on("data", (trade) => {
+      setTrades((prevTrades) => {
+        const uniqueTrades = prevTrades.filter((prevTrade) => prevTrade.tradeId !== trade.returnValues.tradeId);
+        const sortedTrades = [...uniqueTrades, trade.returnValues].sort(compare);
+        return sortedTrades;
+      });
+    });
+    setListener(listener);
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -49,11 +74,24 @@ function Shell() {
           tokenSymbols.push(symbol);
         }
       }
+      tradesListener(tokenSymbols[0]);
       setActiveToken(tokenSymbols[0]);
       setTokens(tokenSymbols);
     }
     init();
   }, [dex, web3]);
+
+  useEffect(
+    () => {
+      if (activeToken) {
+        tradesListener(activeToken);
+      }
+    },
+    [activeToken],
+    () => {
+      listener.unsubscribe();
+    }
+  );
 
   return (
     <div>
@@ -206,9 +244,18 @@ function Shell() {
               </div>
             </div>
             <div className="my-4"></div>
-            <div className="grid grid-cols-1" style={{ minHeight: "10rem" }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 md:gap-4 xl:gap-8" style={{ minHeight: "10rem" }}>
               <div className="mb-4 md:mb-0">
                 <MyOrders activeToken={activeToken} />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <MyTrades trades={trades} activeToken={activeToken} />
+              </div>
+            </div>
+            <div className="my-4"></div>
+            <div className="grid grid-cols-1" style={{ minHeight: "10rem" }}>
+              <div className="mb-4 md:mb-0">
+                <AllTrades trades={trades} activeToken={activeToken} />
               </div>
             </div>
           </div>

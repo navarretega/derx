@@ -35,7 +35,7 @@ function MyOrders({ activeToken }) {
 
   return (
     <div className="bg-gray-50 overflow-hidden shadow rounded-lg">
-      <div className="bg-gray-100 text-center px-4 py-5 sm:px-6 tracking-wider">MY CURRENT ORDERS</div>
+      <div className="bg-gray-100 text-center px-4 py-5 sm:px-6 tracking-wider">MY ACTIVE ORDERS</div>
       <div className="px-4 py-5 sm:p-6">
         <div className="flex flex-col">
           <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
