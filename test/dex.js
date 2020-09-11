@@ -276,5 +276,22 @@ contract("Dex", ([owner, trader1, trader2]) => {
       await dex.deposit(symbol, depositAmount, { from: trader1 });
       await expectRevert(dex.marketOrder(symbol, orderAmount, 1, { from: trader1 }), "Not enough tokens");
     });
+    it("Should clean orderbook", async () => {
+      const symbolDAI = web3.utils.fromAscii("DAI");
+      const symbolBNB = web3.utils.fromAscii("BNB");
+      const depositAmount = toWei("10000");
+      const orderAmount = toWei("100");
+      const price = 100;
+      const buy = 0;
+      const sell = 1;
+      await dex.deposit(symbolDAI, depositAmount, { from: trader1 });
+      await dex.deposit(symbolBNB, depositAmount, { from: trader2 });
+      await dex.limitOrder(symbolBNB, orderAmount, price, buy, { from: trader1 });
+      await dex.marketOrder(symbolBNB, orderAmount, sell, { from: trader2 });
+      const buyOrders = await dex.getOrders(symbolBNB, buy);
+      const sellOrders = await dex.getOrders(symbolBNB, sell);
+      assert.equal(buyOrders.length, 0);
+      assert.equal(sellOrders.length, 0);
+    });
   });
 });

@@ -4,6 +4,8 @@ import EthContext from "../EthContext";
 import Dropdown from "./Dropdown";
 import Wallet from "./Wallet";
 import Orders from "./Orders";
+import AllOrders from "./AllOrders";
+import MyOrders from "./MyOrders";
 import ERC20Modal from "./ERC20Modal";
 import WalletModal from "./WalletModal";
 
@@ -183,10 +185,31 @@ function Shell() {
       <main className="-mt-32">
         <div className="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-lg shadow px-5 py-6 sm:px-6">
-            <div className="grid grid-cols-3 gap-8" style={{ minHeight: "20rem" }}>
-              <Wallet activeToken={activeToken} setShowWalletModal={setShowWalletModal} setWalletDef={setWalletDef} />
-              <Orders type="BUY" activeToken={activeToken} />
-              <Orders type="SELL" activeToken={activeToken} />
+            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-4 xl:grid-cols-3 xl:gap-8" style={{ minHeight: "10rem" }}>
+              <div className="md:col-span-2 xl:col-span-1 mb-4 md:mb-0">
+                <Wallet activeToken={activeToken} setShowWalletModal={setShowWalletModal} setWalletDef={setWalletDef} />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <Orders type="BUY" activeToken={activeToken} />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <Orders type="SELL" activeToken={activeToken} />
+              </div>
+            </div>
+            <div className="my-4"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 md:gap-4 xl:gap-8" style={{ minHeight: "10rem" }}>
+              <div className="mb-4 md:mb-0">
+                <AllOrders type="BUY" activeToken={activeToken} />
+              </div>
+              <div className="mb-4 md:mb-0">
+                <AllOrders type="SELL" activeToken={activeToken} />
+              </div>
+            </div>
+            <div className="my-4"></div>
+            <div className="grid grid-cols-1" style={{ minHeight: "10rem" }}>
+              <div className="mb-4 md:mb-0">
+                <MyOrders activeToken={activeToken} />
+              </div>
             </div>
           </div>
         </div>

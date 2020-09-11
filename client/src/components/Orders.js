@@ -5,8 +5,8 @@ import Notification from "./Notification";
 
 function Orders({ type, activeToken }) {
   const [marketType, setMarketType] = useState("limit");
-  const [amount, setAmount] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [amount, setAmount] = useState("0");
+  const [price, setPrice] = useState("0");
   const [showNotification, setShowNotification] = useState(false);
   const [showErr, setShowErr] = useState(false);
   const eth = useContext(EthContext);
@@ -95,39 +95,41 @@ function Orders({ type, activeToken }) {
         </div>
         <div className="mt-5">
           <span className="flex w-full rounded-md shadow-sm">
-            <button
-              onClick={order}
-              type="button"
-              className="inline-flex w-full justify-center items-center px-3 py-2 text-gray-900 border border-transparent text-sm leading-4 font-medium rounded-md bg-green-300 hover:bg-green-400 focus:outline-none focus:border-green-300 focus:shadow-outline-gray active:bg-green-700 transition ease-in-out duration-150"
-            >
-              {type === "BUY" ? (
-                <span className="inline-flex">
-                  Buy
-                  <svg
-                    className="ml-2 -mr-0.5 h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </span>
-              ) : (
-                <span className="inline-flex">
-                  <svg
-                    className="mr-2 -ml-0.5 h-4 w-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  Sell
-                </span>
-              )}
-            </button>
+            {type === "BUY" ? (
+              <button
+                onClick={order}
+                type="button"
+                className="inline-flex w-full justify-center items-center px-3 py-2 text-gray-900 border border-transparent text-sm leading-4 font-medium rounded-md bg-green-300 hover:bg-green-400 focus:outline-none focus:border-green-300 focus:shadow-outline-gray active:bg-green-700 transition ease-in-out duration-150"
+              >
+                Buy
+                <svg
+                  className="ml-2 -mr-0.5 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={order}
+                className="inline-flex w-full justify-center items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-900 bg-gray-300 hover:bg-gray-400 focus:outline-none focus:border-gray-400 focus:shadow-outline-gray active:bg-gray-400 transition ease-in-out duration-150"
+              >
+                <svg
+                  className="mr-2 -ml-0.5 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Sell
+              </button>
+            )}
           </span>
         </div>
       </div>

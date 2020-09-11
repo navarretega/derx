@@ -65,11 +65,11 @@ function Wallet({ activeToken, setShowWalletModal, setWalletDef }) {
   }, [web3, dex, accountAddress, activeToken, getBalance]);
 
   return (
-    <div className="bg-gray-50 overflow-hidden shadow rounded-lg">
+    <div className="bg-gray-50 overflow-hidden shadow rounded-lg h-full">
       {showNotification && <Notification setShowNotification={setShowNotification} showErr={showErr} />}
       <div className="bg-gray-100 text-center px-4 py-5 sm:px-6 tracking-wider">WALLET</div>
       <div className="px-4 py-5 sm:p-6">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-around items-center">
           <div>
             <h4 className="text-xl">
               {daiTokenBalance} <span className="text-xs text-green-900">DAI</span>
@@ -119,7 +119,7 @@ function Wallet({ activeToken, setShowWalletModal, setWalletDef }) {
           </div>
         </div>
         <div className="my-8"></div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-around items-center">
           <div>
             <h4 className="text-xl">
               {tokenBalance} <span className="text-xs text-green-900">{activeToken}</span>
