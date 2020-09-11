@@ -1036,12 +1036,12 @@
         }
       },
       "links": {},
-      "address": "0x2Cd6BEfb81Cbc2f2442FcA410B8F931E509F734b",
-      "transactionHash": "0x7c4b04ed07de2cd268a137c195a54ad352f5d20ce0a15b78045328ccf2c23c5f"
+      "address": "0xCfc93BDc28a39A0C144e469780605A2BeCAd7d24",
+      "transactionHash": "0xf1203f1734515eb91387788fa9f48c4917e4ef112869df587eee934597c8cc71"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-09-09T21:33:57.563Z",
+  "updatedAt": "2020-09-11T17:56:00.528Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

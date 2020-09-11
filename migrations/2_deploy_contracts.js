@@ -10,10 +10,10 @@ module.exports = async function (deployer, network, accounts) {
   const bnbSymbol = web3.utils.fromAscii("BNB");
   const linkSymbol = web3.utils.fromAscii("LINK");
   const yfiSymbol = web3.utils.fromAscii("YFI");
-  const daiAmount = web3.utils.toWei("2000"); // 2000 DAI from faucet to account
-  const tokenAmount = web3.utils.toWei("1000"); // 1000 BNB/LINK/YFI from faucet to account
-  const dexDaiAmount = web3.utils.toWei("1500"); // 1000 DAI from account to dex
-  const dexTokenAmount = web3.utils.toWei("500"); // 500 BNB/LINK/YFI from account to dex
+  const daiAmount = web3.utils.toWei("5000"); // 5000 DAI from faucet to account
+  const tokenAmount = web3.utils.toWei("3000"); // 3000 BNB/LINK/YFI from faucet to account
+  const dexDaiAmount = web3.utils.toWei("2500"); // 2500 DAI from account to dex
+  const dexTokenAmount = web3.utils.toWei("1500"); // 1500 BNB/LINK/YFI from account to dex
   const [trader1, trader2, _] = accounts;
   const buy = 0;
   const sell = 1;
@@ -127,4 +127,35 @@ module.exports = async function (deployer, network, accounts) {
   await dex.limitOrder(yfiSymbol, web3.utils.toWei("45"), 3, sell, { from: trader1 });
   await dex.marketOrder(yfiSymbol, web3.utils.toWei("45"), buy, { from: trader2 });
   await increaseTime(2);
+  // Finally set some 'random' limit orders
+  await dex.limitOrder(bnbSymbol, web3.utils.toWei("25"), 5, buy, { from: trader2 });
+  await increaseTime(1);
+  await dex.limitOrder(bnbSymbol, web3.utils.toWei("30"), 6, buy, { from: trader2 });
+  await increaseTime(1);
+  await dex.limitOrder(bnbSymbol, web3.utils.toWei("30"), 8, sell, { from: trader2 });
+  await increaseTime(2);
+  await dex.limitOrder(bnbSymbol, web3.utils.toWei("17"), 7, sell, { from: trader2 });
+  await increaseTime(3);
+  await dex.limitOrder(bnbSymbol, web3.utils.toWei("10"), 9, sell, { from: trader2 });
+  await increaseTime(3);
+  await dex.limitOrder(linkSymbol, web3.utils.toWei("23"), 7, buy, { from: trader1 });
+  await increaseTime(2);
+  await dex.limitOrder(linkSymbol, web3.utils.toWei("12"), 4, sell, { from: trader2 });
+  await increaseTime(1);
+  await dex.limitOrder(linkSymbol, web3.utils.toWei("23"), 10, sell, { from: trader1 });
+  await increaseTime(1);
+  await dex.limitOrder(linkSymbol, web3.utils.toWei("7"), 7, buy, { from: trader2 });
+  await increaseTime(1);
+  await dex.limitOrder(linkSymbol, web3.utils.toWei("11"), 9, sell, { from: trader1 });
+  await increaseTime(2);
+  await dex.limitOrder(yfiSymbol, web3.utils.toWei("14"), 12, sell, { from: trader2 });
+  await increaseTime(3);
+  await dex.limitOrder(yfiSymbol, web3.utils.toWei("12"), 14, buy, { from: trader1 });
+  await increaseTime(2);
+  await dex.limitOrder(yfiSymbol, web3.utils.toWei("20"), 15, sell, { from: trader2 });
+  await increaseTime(3);
+  await dex.limitOrder(yfiSymbol, web3.utils.toWei("19"), 15, buy, { from: trader1 });
+  await increaseTime(3);
+  await dex.limitOrder(yfiSymbol, web3.utils.toWei("10"), 15, sell, { from: trader2 });
+  await increaseTime(1);
 };
